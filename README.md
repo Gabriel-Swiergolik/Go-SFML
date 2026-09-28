@@ -33,7 +33,7 @@ To build and run this project locally, you will need the following installed on 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Luppen123/Go-SFML.git
+   git clone https://github.com/Gabriel-Swiergolik/Go-SFML.git
 
 2. **Install necessary dependencies:**
     ```bash
