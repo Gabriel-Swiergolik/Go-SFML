@@ -10,6 +10,14 @@
 //     m_window.setFramerateLimit(60);
 // }
 
+/**
+ * Plik: 
+ *      GameController.cc
+ * Rola:
+ *      inijcalizacja i wywolanie obiektow aplikacji,
+ *      kontrola przeplywu aplikacji
+ */
+
 GameController::GameController(float cellSize, float margin, int boardSize, sf::RenderWindow& window) :
     m_window(window),
     m_board(boardSize),
@@ -20,25 +28,45 @@ GameController::GameController(float cellSize, float margin, int boardSize, sf::
     m_window.setFramerateLimit(60);
 }
 
+/**
+ * Funkcja:
+ *      processEvents
+ * Rola:
+ *      obsluga wydarzen za pomoca funkcjonalnosci SFML
+ *      glowna petla rozgrywki
+ */
+
 void GameController::processEvents()
 {
     sf::Event event;
     while (m_window.pollEvent(event))
     {
-        //Todo Switch case
+        //todo: 
+        //switch case?
         if (event.type == sf::Event::Closed)
             m_window.close();
         if (event.type == sf::Event::MouseButtonPressed)
         {
+
+            //todo:
+            //zmienic pipline pixel -> coordinate -> index
+            //obecna forma jest mylaca
             sf::Vector2i mousePosition = sf::Mouse::getPosition(m_window);
             Coordinate coordinates = m_gameGeometry.pixelsToCoordinates(mousePosition.x, mousePosition.y);
 
             int index = m_board.convertCoordinatesToIndex(coordinates);
             m_gameLogic.placeStone(index);
-            //m_board.printBoardState(); //DEBUG
+            m_board.printBoardState(); //DEBUG
         }
     }
 }
+
+/**
+ * Funkcja: 
+ *      render
+ * Rola:
+ *      kontrola grafiki i jej zmian w ognie
+ */
 
 void GameController::render()
 {
@@ -47,6 +75,13 @@ void GameController::render()
     m_boardPainter.drawStoneHighlight(m_gameLogic.getCurrentPlayer());
     m_window.display();
 }
+
+/**
+ * Funkcja: 
+ *      run
+ * Rola:
+ *      inicjalizacja okna
+ */
 
 void GameController::run()
 {

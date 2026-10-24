@@ -1,4 +1,4 @@
-#include "Logic/GameLogic.h"
+#include "Logic/Core/GameLogic.h"
 
 GameLogic::GameLogic(Board& board) : m_board(board)
 {
@@ -36,12 +36,12 @@ void GameLogic::checkNeighbours(const Coordinate& stoneCoordinates, std::vector<
         if(!m_board.isLegal(neighbourCoordinates))
             continue;
 
-        Stone stone = m_board.getStone(neighbourCoordinates);
+        Stone neighbourStoneColor = m_board.getStone(neighbourCoordinates);
         int index = m_board.convertCoordinatesToIndex(neighbourCoordinates);
 
-        if(stone != m_currentPlayer && stone != Stone::None && !visited[index])
+        if(neighbourStoneColor != m_currentPlayer && neighbourStoneColor != Stone::None && !visited[index])
         {
-            Group enemyGroup = m_board.floodFill(neighbourCoordinates, stone);
+            Group enemyGroup = m_board.floodFill(neighbourCoordinates, neighbourStoneColor);
 
             for(const auto& stone : enemyGroup.stoneCoordinates)
             {
@@ -77,21 +77,21 @@ void GameLogic::placeStone(int index)
     std::vector<Intersection> boardStateBeforePlacement = m_board.getBoardState();
     m_board.setStone(index, m_currentPlayer);
 
-    this->checkNeighbours(stoneCoordinates, visited);
+    checkNeighbours(stoneCoordinates, visited);
 
-    if(this->isSuicide(stoneCoordinates))
+    if(isSuicide(stoneCoordinates))
     {
         m_board.setStone(stoneCoordinates, Stone::None);
         return;
     }
 
-    if(this->isKoViolation())
+    if(isKoViolation())
     {
         m_board.setBoardState(boardStateBeforePlacement);
         return;
     }
 
-    this->changePlayer();
+    changePlayer();
     m_board.setPreviousBoardState(boardStateBeforePlacement);
 }
 

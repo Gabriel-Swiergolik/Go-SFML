@@ -1,17 +1,41 @@
-#include "Logic/Board.h"
+#include "Logic/Core/Board.h"
 
 Board::Board(int boardSize)
 {
+    /**
+     * boardSize    -> rozmiar planszy bez scian
+     * vectorWidth  -> rozmiar planszy ze scianami
+     */
+
     m_boardSize = boardSize;
-    m_vectorWidth = m_boardSize+2;
+    m_trueBoardSize = m_boardSize+2;
 
-    int size = m_vectorWidth * m_vectorWidth;
-    m_boardState.reserve(size);
+    m_fieldCount = m_boardSize * m_boardSize;
+    m_trueFieldCount = m_trueBoardSize * m_trueBoardSize;
+    m_boardState.reserve(m_trueFieldCount);
 
-    for(int i = 0; i < size; i++)
+    /**
+     * petla okresla granice planszy i wyznaczy jej sciany
+     * sciany to niewidoczne dla gracza pozycje znajdujaca sie na skraju planszy,
+     * potrzebna do obliczen stanu planszy
+     * 
+     * przykladowy output w postaci graficznej dla planszy 9x9:
+     *   * * * * * * * * * * * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * - - - - - - - - - * 
+     *   * * * * * * * * * * *
+     */
+    for(int i = 0; i < m_trueFieldCount; i++)
     {
-        int rowIndex = std::floor(i / (m_vectorWidth));
-        int columnIndex = i - ((m_vectorWidth) * rowIndex);
+        int rowIndex = std::floor(i / (m_trueBoardSize));
+        int columnIndex = i - ((m_trueBoardSize) * rowIndex);
 
         if(rowIndex == 0  || columnIndex == 0 || rowIndex == m_boardSize+1 || columnIndex == m_boardSize+1)
             m_boardState.emplace_back(Intersection{Stone::Wall});
@@ -32,13 +56,13 @@ void Board::setBoardState(const std::vector<Intersection>& newBoardState)
 
 int Board::convertCoordinatesToIndex(Coordinate coordinates) const
 {
-    return (m_vectorWidth * (coordinates.y + 1)) + (coordinates.x + 1);         
+    return (m_trueBoardSize * (coordinates.y + 1)) + (coordinates.x + 1);         
 }
 
 Coordinate Board::convertIndexToCoordinates(int index) const
 {
-    int y = std::floor(index / (m_vectorWidth));
-    int x = index - ((m_vectorWidth) * y);
+    int y = std::floor(index / (m_trueBoardSize));
+    int x = index - ((m_trueBoardSize) * y);
 
     return {x-1, y-1};
 }
@@ -53,17 +77,17 @@ bool Board::isEmptyAt(int index) const
     return m_boardState[index].isEmpty();
 }
 
+
+//wrong?
 bool Board::isLegal(int index) const
 {
-    int size = m_boardSize * m_boardSize;
-    return index < 0 || index > size-1;
+    return index > 0 || index < m_fieldCount-1;
 }
 
 bool Board::isLegal(Coordinate coordinates) const
 {
     return coordinates.x >= 0 && coordinates.y >= 0 && coordinates.x < m_boardSize  && coordinates.y < m_boardSize ;
 }
-
 
 void Board::setStone(int index, Stone color)
 {
@@ -99,18 +123,25 @@ Stone Board::getStone(Coordinate coordinates) const
 
 Group Board::floodFill(Coordinate startCoordinates, Stone groupColor) const
 {
-    int boardSize = this->getBoardSize();
+    //nie potrzebne
+    //int boardSize = this->getBoardSize();
 
-    std::vector<bool> visited(boardSize*boardSize, false);
-    std::vector<Coordinate> stones;
-    std::set<Coordinate> liberties;
+    /**
+     * todo:
+     *      zastapic liberties int-em? 
+     *      done
+     */
+    std::vector<bool> visited(m_boardSize*m_boardSize, false);
+    std::vector<Coordinate> group;
+    //std::set<Coordinate> liberties;
+    int libertiesCount = 0;
     std::queue<Coordinate> queue;
 
-    int startIndex = this->convertCoordinatesToIndex(startCoordinates);
+    int startIndex = convertCoordinatesToIndex(startCoordinates);
     visited[startIndex] = true;
     queue.push(startCoordinates);
-    stones.push_back(startCoordinates);
-
+    group.push_back(startCoordinates);
+    
     while(!queue.empty())
     {
         Coordinate currentStoneCoordinates = queue.front();
@@ -120,29 +151,35 @@ Group Board::floodFill(Coordinate startCoordinates, Stone groupColor) const
         for(const auto& direction : DIRECTIONS)
         {
             Coordinate neighbourCoordinates = {currentStoneCoordinates.x + direction.x, currentStoneCoordinates.y + direction.y};
-            
-            if(!this->isLegal(neighbourCoordinates))
+
+            //jezeli sciana, pomin
+            if(!isLegal(neighbourCoordinates))
                 continue;
 
-            Stone neighbourColor = this->getStone(neighbourCoordinates);
-            int index = this->convertCoordinatesToIndex(neighbourCoordinates);
+            Stone neighbourColor = getStone(neighbourCoordinates);
+            int index = convertCoordinatesToIndex(neighbourCoordinates);
 
             if(neighbourColor == groupColor && !visited[index])
             {
                 visited[index] = true;
-                stones.push_back(neighbourCoordinates);
+                group.push_back(neighbourCoordinates);
                 queue.push(neighbourCoordinates);
             }
             else if(neighbourColor == Stone::None)
             {
-                liberties.insert(neighbourCoordinates);
+                //liberties.insert(neighbourCoordinates);
+                libertiesCount++;
             }
         }
     }
-    return {(int)liberties.size(), stones};
+    //return {(int)liberties.size(), stones};
+    return {libertiesCount, group};
 }
 
-
+/**
+ * todo
+ *      wrzucic gdzies indziej niz board.cc
+ */
 void Board::printBoardState() const
 {
     int spaceCounter = 0;

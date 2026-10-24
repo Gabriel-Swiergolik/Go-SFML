@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Graphic/BoardPainter.h"
-#include "Logic/GameLogic.h"
+#include "Logic/Core/GameLogic.h"
 
 class GameController
 {

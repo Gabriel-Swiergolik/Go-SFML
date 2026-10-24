@@ -33,8 +33,8 @@ target_sources(Headers
     PRIVATE
         src/Graphic/BoardPainter.cc
         src/Graphic/GameGeometry.cc
-        src/Logic/Board.cc
-        src/Logic/GameLogic.cc
+        src/Logic/Core/Board.cc
+        src/Logic/Core/GameLogic.cc
         src/Controllers/GameController.cc
     PUBLIC
         FILE_SET HEADERS
@@ -43,8 +43,8 @@ target_sources(Headers
         FILES
             include/Graphic/BoardPainter.h
             include/Graphic/GameGeometry.h
-            include/Logic/Board.h
-            include/Logic/GameLogic.h
+            include/Logic/Core/Board.h
+            include/Logic/Core/GameLogic.h
             include/Controllers/GameController.h
 )
 

@@ -8,11 +8,27 @@
 #include <set>
 #include <queue>
 
+/**
+ * Obiekt:
+ *      Group
+ * Rola:
+ *      przechowuje ilosc "zyc" grupy oraz koordynaty wszystkich kamieni
+ *      uzywany do obliczen stanu planszy
+ */
+
 struct Group
 {
     int libertyCount;
     std::vector<Coordinate> stoneCoordinates;
 };
+
+/**
+ * Obiekt:
+ *      Intersection
+ * Rola:
+ *      okresla charakter kazdego skrzyzowania na planszy i jej stan
+ *      uzywana w trakcie rysowania planszy oraz obliczen jej stanu
+ */
 
 struct Intersection 
 {
@@ -24,11 +40,27 @@ struct Intersection
     bool operator==(const Intersection& i) const {return stone == i.stone; }
 };
 
+
+ // Prawdopodobnie potrzebny refactor //
+
+/**
+ * Obiekt:
+ *      Board
+ * Rola:
+ *      przechowuje stany planszy
+ *      odpowiada za operacja logiczne na planszy
+ */
+
+ // Prawdopodobnie potrzebny refactor //
+
 class Board
 {
 private:
     int m_boardSize;
-    int m_vectorWidth;
+    //hard-coded, moze potem do modyfikacji z pliku//
+    int m_trueBoardSize;
+    int m_fieldCount;
+    int m_trueFieldCount;
     std::vector<Intersection> m_boardState;
     std::vector<Intersection> m_previousBoardState;
 
@@ -57,7 +89,7 @@ public:
     Stone getStone(Coordinate coordinates) const;
 
     // void deleteGroup(std::vector<Coordinate>& stones);
-    Group floodFill(Coordinate coordinates, Stone currentPlayer) const;
+    Group floodFill(Coordinate startCoordinates, Stone groupColor) const;
 
     //test function
     void printBoardState() const;

@@ -1,11 +1,14 @@
 #ifndef COMMON_H
 #define COMMON_H
+#include <cstdint>
 
-enum class Stone {
+
+//optymalizacja do monte-carlo, 4 bytes -> 1 byte
+enum class Stone : std::uint8_t {
+    White,
+    Black,
     None,
     Wall,
-    Black,
-    White,
 };
 
 struct Coordinate
