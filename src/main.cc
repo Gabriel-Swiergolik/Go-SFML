@@ -3,6 +3,14 @@
 
 #include <Controllers/GameController.h>
 
+/**
+ * funkcja: 
+ *      main.cc
+ * rola: 
+ *      entry-point dla aplikacji, 
+ *      wczytywanie parametrow
+ */
+
 int main()
 {
     sf::ContextSettings settings;
