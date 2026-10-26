@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Go_SFML LANGUAGES CXX)
 
@@ -34,8 +36,8 @@ target_sources(Headers
         src/Graphic/BoardPainter.cc
         src/Graphic/GameGeometry.cc
         src/Logic/Core/Board.cc
-        src/Logic/Core/GameLogic.cc
         src/Controllers/GameController.cc
+        src/Logic/Analysis/MonteCarloSimulation.cc
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS
@@ -44,8 +46,11 @@ target_sources(Headers
             include/Graphic/BoardPainter.h
             include/Graphic/GameGeometry.h
             include/Logic/Core/Board.h
-            include/Logic/Core/GameLogic.h
+            include/Logic/Core/LibertyBitset.h
+            include/Logic/Core/SplitMix.h
+            include/Logic/Core/ZobristHash.h
             include/Controllers/GameController.h
+            include/Logic/Analysis/MonteCarloSimulation.h
 )
 
 target_link_libraries(Headers

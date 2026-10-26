@@ -18,76 +18,109 @@
  *      kontrola przeplywu aplikacji
  */
 
-GameController::GameController(float cellSize, float margin, int boardSize, sf::RenderWindow& window) :
-    m_window(window),
-    m_board(boardSize),
-    m_gameLogic(m_board),
-    m_gameGeometry(cellSize, margin, boardSize),
-    m_boardPainter(m_window, m_board, m_gameGeometry)
+namespace Go
 {
-    m_window.setFramerateLimit(60);
-}
+    GameController::GameController(float cellSize, float margin, int boardSize, sf::RenderWindow& window) :
+        //window(window),
+        m_board(boardSize),
+        m_gameGeometry(cellSize, margin, boardSize),
+        m_boardPainter(window, m_board, m_gameGeometry)
+    {}
+    
 
-/**
- * Funkcja:
- *      processEvents
- * Rola:
- *      obsluga wydarzen za pomoca funkcjonalnosci SFML
- *      glowna petla rozgrywki
- */
-
-void GameController::processEvents()
-{
-    sf::Event event;
-    while (m_window.pollEvent(event))
+    Board& GameController::getBoard()
     {
-        //todo: 
-        //switch case?
-        if (event.type == sf::Event::Closed)
-            m_window.close();
-        if (event.type == sf::Event::MouseButtonPressed)
-        {
-
-            //todo:
-            //zmienic pipline pixel -> coordinate -> index
-            //obecna forma jest mylaca
-            sf::Vector2i mousePosition = sf::Mouse::getPosition(m_window);
-            Coordinate coordinates = m_gameGeometry.pixelsToCoordinates(mousePosition.x, mousePosition.y);
-
-            int index = m_board.convertCoordinatesToIndex(coordinates);
-            m_gameLogic.placeStone(index);
-            m_board.printBoardState(); //DEBUG
-        }
+        return m_board;
     }
-}
-
-/**
- * Funkcja: 
- *      render
- * Rola:
- *      kontrola grafiki i jej zmian w ognie
- */
-
-void GameController::render()
-{
-    m_window.clear();
-    m_boardPainter.drawBoard();
-    m_boardPainter.drawStoneHighlight(m_gameLogic.getCurrentPlayer());
-    m_window.display();
-}
-
-/**
- * Funkcja: 
- *      run
- * Rola:
- *      inicjalizacja okna
- */
-
-void GameController::run()
-{
-    while(m_window.isOpen())
+    const GameGeometry& GameController::getGameGemetry() const
     {
-        this->processEvents();
-        this->render();
+        return m_gameGeometry;
     }
+    BoardPainter& GameController::getBoardPainter()
+    {
+        return m_boardPainter;
+    }
+
+
+    /**
+     * Funkcja:
+     *      processEvents
+     * Rola:
+     *      obsluga wydarzen za pomoca funkcjonalnosci SFML
+     *      glowna petla rozgrywki
+     */
+    
+    // void GameController::processEvents(sf::RenderWindow& window)
+    // {
+    //     sf::Font font;
+    //     if(!font.loadFromFile("resources/fonts/firaSans.ttf"))
+    //     {
+    //         std::cerr << "Error loading font\n";
+    //         return;
+    //     }
+    //     sf::Text text;
+    //     text.setFont(font); // Apply the loaded font
+    //     text.setString("Hello, SFML!"); // Set the string to display
+    //     text.setCharacterSize(24); // Set size in pixels
+    //     text.setFillColor(sf::Color::White); // Set text color
+    //     text.setPosition(50.f, 50.f); // Set position on screen
+
+        
+    //     sf::Event event;
+    //     while (window.pollEvent(event))
+    //     {
+    //         //todo: 
+    //         //switch case?
+    //         if (event.type == sf::Event::Closed)
+    //             window.close();
+    //         else if (event.type == sf::Event::MouseButtonPressed)
+    //         {
+    
+    //             //todo:
+    //             //zmienic pipline pixel -> coordinate -> index
+    //             //obecna forma jest mylaca
+    //             sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+    //             Coordinate coordinates = m_gameGeometry.pixelsToCoordinates(mousePosition.x, mousePosition.y);
+    
+    //             int index = m_board.convertCoordinatesToIndex(coordinates);
+    //             m_board.placeStone(index);
+    //             m_board.printBoardState(); //DEBUG
+    //         }
+    //         else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+    //         {
+                
+    //         }
+    //     }
+    // }
+    
+    /**
+     * Funkcja: 
+     *      render
+     * Rola:
+     *      kontrola grafiki i jej zmian w ognie
+     */
+    
+    // void GameController::render(sf::RenderWindow& window)
+    // {
+    //     window.clear();
+    //     m_boardPainter.drawBoard();
+    //     m_boardPainter.drawStoneHighlight(m_board.getCurrentPlayer());
+    //     window.display();
+    // }
+    
+    /**
+     * Funkcja: 
+     *      run
+     * Rola:
+     *      inicjalizacja okna
+     */
+    
+    // void GameController::run(sf::RenderWindow& window)
+    // {
+    //     while(window.isOpen())
+    //     {
+    //         processEvents(window);
+    //         render(window);
+    //     }
+    // }
 }

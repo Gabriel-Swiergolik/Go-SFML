@@ -1,40 +1,44 @@
-#ifndef GAME_LOGIC_H
-#define GAME_LOGIC_H
+// #pragma once
 
-#include "Logic/Core/Board.h"
+// #include "Logic/Core/Board.h"
+// #include <bit>
+// #include <bitset>
 
-struct Score
-{
-    float White;
-    float Black;
-};
+// //TO BE NUKED -> merged with board
 
-class GameLogic
-{
-private:
-    Board& m_board;
-    Stone m_currentPlayer;
-    Score m_score;    
-
-public:
-    GameLogic(Board& board);
-
-    void incrementScore(Stone color);
-    Score getScore() const;
-
-    Stone getCurrentPlayer() const;
-    const Board& getBoard() const; //probably not needed
-
-    void checkNeighbours(const Coordinate& stoneCoordinates, std::vector<bool>& visited);
-    bool isSuicide(const Coordinate& stoneCoordinates );
-    bool isKoViolation();
-
-    void placeStone(int index);
-    void captureGroup(std::vector<Coordinate>& group);
+// namespace Go
+// {
 
 
-    void changePlayer();
 
-};
+//     class GameLogic
+//     {
+//     private:
 
-#endif
+        
+//         Board& m_board;
+  
+
+//     public:
+//         GameLogic(Board& board);
+
+//         void incrementScore(Stone color);
+//         Score getScore() const;
+
+//         Stone getCurrentPlayer() const;
+//         const Board& getBoard() const; //probably not needed
+
+//         void checkNeighbours(const Coordinate& stoneCoordinates, std::vector<bool>& visited);
+//         bool isSuicide(const Coordinate& stoneCoordinates );
+//         bool isKoViolation();
+
+//         void placeStone(int index);
+//         void captureGroup(std::vector<Coordinate>& group);
+
+
+//         void changePlayer();
+
+//     };
+// }
+
+
